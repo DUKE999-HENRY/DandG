@@ -1,0 +1,33 @@
+const items = document.querySelectorAll('.item');
+let draggingItem = null;
+
+items.forEach(item => {
+    item.addEventListener('dragstart', (e) => {
+        draggingItem = e.target;
+        e.dataTransfer.setData('text/plain', e.target.textContent);
+        e.target.classList.add('dragging');
+    });
+
+    item.addEventListener('dragend', () => {
+        draggingItem.classList.remove('dragging');
+        draggingItem = null;
+    });
+});
+
+const container = document.getElementById('container');
+
+container.addEventListener('dragover', (e) => {
+    e.preventDefault();
+});
+
+container.addEventListener('drop', (e) => {
+    e.preventDefault();
+    if (draggingItem) {
+        const text = e.dataTransfer.getData('text/plain');
+        const newItem = document.createElement('div');
+        newItem.classList.add('item');
+        newItem.textContent = text;
+        container.appendChild(newItem);
+        draggingItem.remove();
+    }
+});
